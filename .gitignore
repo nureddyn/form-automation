@@ -1,0 +1,4 @@
+/venv
+/modules/__pycache__
+/modules/classes/__pycache__
+/tests/__pycache__
