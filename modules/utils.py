@@ -1,5 +1,6 @@
+import os
 from typing import List, Any, Dict
-from .classes import File
+from modules.classes.File import File
 import csv
 from openpyxl import load_workbook
 from openpyxl.utils.exceptions import InvalidFileException
@@ -10,17 +11,35 @@ import PyPDF2
 Validate file according to process of transport data from a spreadsheet to word/pdf
 """
 
+# TODO: Validate files using a validate_extension, a valid_data_file (to check if the content format is correct) and a valid_template_file()
+
+def get_file_list() -> List[File]:
+    current_directory = os.path.dirname(os.path.realpath(__file__))
+    input_directory = os.path.join(current_directory, '..', 'input')
+    file_list = os.listdir(input_directory)
+
+    files = []
+
+    for file in file_list:
+        full_path = os.path.join(input_directory, file)
+
+        file = File(full_path)
+        if validate_file(file):
+            files.append(file)
+    return files
+
+
 def validate_file(file: File) -> bool:
     if file.extension in [".csv", ".xlsx", ".gsheet", ".pdf"]:
         return True
-    raise ValueError("File extension not allowed")
+    # raise ValueError("File extension not allowed")
 
 
 def get_file_type(file: File) -> str:
     if file.extension in [".csv", ".xlsx", ".gsheet"]:
-        return 'Input file'
+        return 'Data file'
     elif file.extension in [".docx", ".pdf"]:
-        return 'Output file'
+        return 'Template file'
     raise ValueError("File type not allowed")
 
 
@@ -42,7 +61,7 @@ def file_writer(buffer, template: File):
         raise NotImplementedError("writing to docx or gsheet is not implemented yet.")
 
 
-# TODO: Check if the following function is correct
+# 1. Function with test
 def write_to_pdf(buffer, template: File):
     with open(template.path, "rb") as existing_file:
         reader = PyPDF2.PdfFileReader(existing_file)
