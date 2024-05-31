@@ -6,12 +6,12 @@ from openpyxl import load_workbook
 from openpyxl.utils.exceptions import InvalidFileException
 import xlrd
 import PyPDF2
-
+from .file_formats import data_formats
 """
 Validate file according to process of transport data from a spreadsheet to word/pdf
 """
 
-# TODO: Validate files using a validate_extension, a valid_data_file (to check if the content format is correct) and a valid_template_file()
+# TODO: Validate files using a valid_extension (done), a valid_data_file (to check if the content format is correct) and a valid_template_file()
 
 def get_file_list() -> List[File]:
     current_directory = os.path.dirname(os.path.realpath(__file__))
@@ -24,16 +24,33 @@ def get_file_list() -> List[File]:
         full_path = os.path.join(input_directory, file)
 
         file = File(full_path)
-        if validate_file(file):
+        if valid_extension(file) and is_valid_format(file):
             files.append(file)
     return files
 
 
-def validate_file(file: File) -> bool:
+def valid_extension(file: File) -> bool:
     if file.extension in [".csv", ".xlsx", ".gsheet", ".pdf"]:
         return True
     # raise ValueError("File extension not allowed")
 
+# TODO: Define formats in a separate module
+def allowed_formats():
+    return [{'form-type': 'f1', 'b': ''}, {'form-type': 'f2', 'd': ''}]
+
+def is_valid_format(file: File) -> bool:
+    # Read the file and check if the format is the same as the predefined by allowed_formats()
+    file_buffer = file_reader(file)
+    file_buffer_keys = file_buffer.keys()
+
+    for format in data_formats:
+        if format.keys() == file_buffer_keys and file_buffer.get('TYPE') == format.get('TYPE'):
+            return True
+    return False
+
+
+def data_file_format(file: File) -> str:
+    return
 
 def get_file_type(file: File) -> str:
     if file.extension in [".csv", ".xlsx", ".gsheet"]:
@@ -43,7 +60,7 @@ def get_file_type(file: File) -> str:
     raise ValueError("File type not allowed")
 
 
-def file_reader(file: File) -> List[List[str]]:
+def file_reader(file: File) -> Dict[str, str]:
     if file.extension == ".csv":
         return csv_buffer(file.path)
     elif file.extension == ".xlsx":
@@ -106,22 +123,22 @@ def csv_buffer(path: str) -> Dict[str, str]:
     return buffer
 
 
-def excel_buffer(path) -> Dict[str, str]:
+def excel_buffer(path: str) -> Dict[str, str]:
     buffer = {}
     try:
         workbook = load_workbook(path, data_only=True)
         sheet = workbook.active
 
-        # Assuming the first row contains only the form type (permanent permit, temporal permit, etc.)
-        num_rows_to_skip = 1
-        for row in sheet.iter_rows(min_row=num_rows_to_skip + 1, values_only=True):
+        for row in sheet.iter_rows(values_only=True):
             #TODO: fix this (buffer is a dict)
-            buffer.append(row)
+            if row[0] is not None and row[1] is not None:
+                buffer[row[0].strip()] = str(row[1]).strip()
+
         return buffer
     except FileNotFoundError:
         raise FileNotFoundError(f"Error: The file at {path} was not found.")
     except PermissionError:
-        raise PermissionError(f"Error: Permission denied for the file at {path}.")
+        raise PermissionError(f"Error: Permission denied for the file at {path}. Hint: You must close the file before running the program")
     except InvalidFileException:
         raise InvalidFileException(f"Error: The file at {path} is not a valid Excel file.")
     except Exception as e:

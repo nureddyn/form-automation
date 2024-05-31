@@ -1,6 +1,7 @@
 /venv
 /input
 /output
+/modules/private_formats.py
 /modules/__pycache__
 /modules/classes/__pycache__
 /tests/__pycache__
