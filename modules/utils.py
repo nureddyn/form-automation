@@ -34,12 +34,9 @@ def valid_extension(file: File) -> bool:
         return True
     # raise ValueError("File extension not allowed")
 
-# TODO: Define formats in a separate module
-def allowed_formats():
-    return [{'form-type': 'f1', 'b': ''}, {'form-type': 'f2', 'd': ''}]
 
 def is_valid_format(file: File) -> bool:
-    # Read the file and check if the format is the same as the predefined by allowed_formats()
+    # Read the file and check if the format comply with a predefined conventions
     file_buffer = file_reader(file)
     file_buffer_keys = file_buffer.keys()
 
