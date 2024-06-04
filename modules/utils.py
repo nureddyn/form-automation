@@ -26,6 +26,8 @@ def get_file_list() -> List[File]:
         file = File(full_path)
         if valid_extension(file) and is_valid_format(file):
             files.append(file)
+            
+            # TODO: pull template based on input files
     return files
 
 
@@ -64,6 +66,8 @@ def file_reader(file: File) -> Dict[str, str]:
         return excel_buffer(file.path)
     elif file.extension == ".gsheet":
         return gsheet_buffer(file.path)
+    elif file.extension == ".pdf":
+        return pdf_buffer(file.path)
     raise ValueError("File type not supported for reading")
 
 
@@ -72,29 +76,49 @@ def file_writer(buffer, template: File):
     if template.path == ".pdf":
         write_to_pdf(buffer, template)
     else:
-        raise NotImplementedError("writing to docx or gsheet is not implemented yet.")
+        raise NotImplementedError("writing to docx is not implemented yet.")
 
 
 # 1. Function with test
-def write_to_pdf(buffer, template: File):
-    with open(template.path, "rb") as existing_file:
-        reader = PyPDF2.PdfFileReader(existing_file)
-        writer = PyPDF2.PdfFileWriter()
+# TODO: check if implementation is correct
+def write_to_pdf(buffer: Dict[str, str], template: File):
+    reader = file_reader(template)
+    writer = PyPDF2.PdfFileWriter()
 
-        for page_num in range(reader.numPages):
-            page = reader.getPage(page_num)
-            writer.addPage(page)
+    for page_num in range(reader.numPages):
+        page = reader.getPage(page_num)
+        writer.addPage(page)
 
-            fields = reader.getFields(page)
-            if fields:
-                for key in buffer:
-                    if key in fields:
-                        fields[key].update({"/V": buffer[key]})
-                writer.updatePageFormFieldValues(page, fields)
+        fields = reader.getFields(page)
+        if fields:
+            for key in buffer:
+                if key in fields:
+                    fields[key].update({"/V": buffer[key]})
+            writer.updatePageFormFieldValues(page, fields)
 
-        with open("output.pdf", "wb") as output_file:
-            writer.write(output_file)
+    # Write the final pdf form in input folder 
+    output_path = os.path.join('output', "output.pdf")
+    with open(output_path, "wb") as output_file:
+        writer.write(output_file)
         
+# TODO: check if implementation is correct
+def pdf_buffer(path: str) -> PyPDF2.PdfFileReader:
+    try:
+        with open(path, "rb") as f:
+            buffer = PyPDF2.PdfFileReader(f)
+
+    except FileNotFoundError:
+        raise FileNotFoundError(f"Error: The file at {path} was not found.")
+    except PermissionError:
+        raise PermissionError(f"Error: Permission denied for the file at {path}.")
+    except csv.Error as e:
+        raise csv.Error(f"Error: An error occurred while reading the CSV file at {path}: {e}")
+    except Exception as e:
+        raise Exception(f"An unexpected error occurred: {e}")
+    
+    return buffer
+
+
 
 def csv_buffer(path: str) -> Dict[str, str]:
     buffer = {}
