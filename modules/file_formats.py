@@ -15,5 +15,8 @@ if module_spec is not None:
 
     data_formats = formats.data_formats
 
+# TODO: Look for an implementation of a default data_format
+else:
+    data_formats = [{}]
 
-    form_template_formats = [{}]
+form_template_formats = [{}]

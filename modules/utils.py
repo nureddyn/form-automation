@@ -102,8 +102,6 @@ def csv_buffer(path: str) -> Dict[str, str]:
     try:
         with open(path, 'r', newline='') as f:
             reader = csv.reader(f, delimiter=',')
-            # Skip the first row (Assuming the first row contains only the form type)
-            next(reader)
             for row in reader:
                 if len(row) == column_number:
                     buffer[row[0].strip()] = row[1].strip()
