@@ -13,7 +13,7 @@ Validate file according to process of transport data from a spreadsheet to word/
 
 # TODO: Validate files using a valid_extension (done), a valid_data_file (to check if the content format is correct) and a valid_template_file()
 
-def get_file_list() -> List[File]:
+def get_input_file_list() -> List[File]:
     current_directory = os.path.dirname(os.path.realpath(__file__))
     input_directory = os.path.join(current_directory, '..', 'input')
     file_list = os.listdir(input_directory)
@@ -26,8 +26,6 @@ def get_file_list() -> List[File]:
         file = File(full_path)
         if valid_extension(file) and is_valid_format(file):
             files.append(file)
-            
-            # TODO: pull template based on input files
     return files
 
 
@@ -37,8 +35,9 @@ def valid_extension(file: File) -> bool:
     # raise ValueError("File extension not allowed")
 
 
+# TODO: This function must make a distinction between input and template files
 def is_valid_format(file: File) -> bool:
-    # Read the file and check if the format comply with a predefined conventions
+    # Read the file and check if the format comply with predefined conventions
     file_buffer = file_reader(file)
     file_buffer_keys = file_buffer.keys()
 
@@ -47,7 +46,7 @@ def is_valid_format(file: File) -> bool:
             return True
     return False
 
-
+# TODO: Create a function that determines which template will be used.
 def data_file_format(file: File) -> str:
     return
 
@@ -57,6 +56,18 @@ def get_file_type(file: File) -> str:
     elif file.extension in [".docx", ".pdf"]:
         return 'Template file'
     raise ValueError("File type not allowed")
+
+
+def generate_forms(files: List[File]):
+    templates_folder = os.path.join(os.path.dirname(__file__), '..', 'templates')
+    templates_list = os.listdir(templates_folder)
+
+    for file in files:
+        buffer = file_reader(file)
+        required_form_type = buffer.get('TYPE')
+        required_template = True
+        file_writer(buffer)
+
 
 
 def file_reader(file: File) -> Dict[str, str]:
