@@ -131,7 +131,6 @@ def excel_buffer(path: str) -> Dict[str, str]:
             if row[0] is not None and row[1] is not None:
                 buffer[row[0].strip()] = str(row[1]).strip()
 
-        return buffer
     except FileNotFoundError:
         raise FileNotFoundError(f"Error: The file at {path} was not found.")
     except PermissionError:
@@ -140,7 +139,8 @@ def excel_buffer(path: str) -> Dict[str, str]:
         raise InvalidFileException(f"Error: The file at {path} is not a valid Excel file.")
     except Exception as e:
         raise Exception(f"An unexpected error occurred: {e}")
-    
+
+    return buffer    
 
 def gsheet_buffer(url) -> List[List[Any]]:
     # TODO: Apply google sheets logic (configure api and get url params)
