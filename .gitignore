@@ -1,10 +1,10 @@
 /venv
-/input/*
-!/input/.gitkeep
-/output/*
+# /input/*
+# !/input/.gitkeep
+# /output/*
 !/output/.gitkeep
-/modules/private_formats.py
+# /modules/private_formats.py
 /modules/__pycache__
 /modules/classes/__pycache__
 /tests/__pycache__
-TODOS.txt
+# TODOS.txt

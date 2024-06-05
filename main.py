@@ -8,6 +8,7 @@ def main():
 
     # Print file content:
     # print(file_reader(files[0]))
+    generate_forms(input_files)
 
 
 

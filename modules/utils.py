@@ -58,15 +58,29 @@ def get_file_type(file: File) -> str:
     raise ValueError("File type not allowed")
 
 
-def generate_forms(files: List[File]):
-    templates_folder = os.path.join(os.path.dirname(__file__), '..', 'templates')
-    templates_list = os.listdir(templates_folder)
+# TODO: Pull the most recent forms from source to 'templates' folder
+def update_templates():
+    return
 
-    for file in files:
-        buffer = file_reader(file)
-        required_form_type = buffer.get('TYPE')
-        required_template = True
-        file_writer(buffer)
+
+def generate_forms(input_files: List[File]):
+
+    update_templates()
+
+    # TODO: Ensure the template file can be scanned to get the form type
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    project_dir = os.path.dirname(current_dir)
+
+    templates_folder = os.path.join(project_dir, 'templates')
+    templates_list = os.listdir(templates_folder)
+    template_files = [File(os.path.join(templates_folder, template)) for template in templates_list]
+    
+    for file in input_files:
+        input_buffer = file_reader(file)
+        required_form_type = input_buffer.get('TYPE')
+        required_template = next((template for template in template_files if file_reader(template).get('TYPE') == required_form_type), None)
+
+        file_writer(input_buffer, required_template)
 
 
 
@@ -84,16 +98,19 @@ def file_reader(file: File) -> Dict[str, str]:
 
 # TODO: Implement writer functionality for docx
 def file_writer(buffer, template: File):
-    if template.path == ".pdf":
-        write_to_pdf(buffer, template)
-    else:
-        raise NotImplementedError("writing to docx is not implemented yet.")
+    try:
+        if template.extension == ".pdf":
+            write_to_pdf(buffer, template)
+        else:
+            raise NotImplementedError("writing to docx is not implemented yet.")
+    except Exception as e:
+        raise Exception(f"buffer or template does not exist")
 
 
 # 1. Function with test
 # TODO: check if implementation is correct
 def write_to_pdf(buffer: Dict[str, str], template: File):
-    reader = file_reader(template)
+    reader = file_reader(template).get('reader')
     writer = PyPDF2.PdfFileWriter()
 
     for page_num in range(reader.numPages):
@@ -107,16 +124,22 @@ def write_to_pdf(buffer: Dict[str, str], template: File):
                     fields[key].update({"/V": buffer[key]})
             writer.updatePageFormFieldValues(page, fields)
 
-    # Write the final pdf form in input folder 
-    output_path = os.path.join('output', "output.pdf")
+    # Write the final pdf form in input folder
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    output_path = os.path.join(current_dir, '..', 'output', "output.pdf")
+    
     with open(output_path, "wb") as output_file:
         writer.write(output_file)
         
 # TODO: check if implementation is correct
-def pdf_buffer(path: str) -> PyPDF2.PdfFileReader:
+def pdf_buffer(path: str) -> PyPDF2.PdfReader:
     try:
         with open(path, "rb") as f:
-            buffer = PyPDF2.PdfFileReader(f)
+            pdf_reader = PyPDF2.PdfReader(f)
+            metadata = pdf_reader.metadata()
+            title = metadata.get('/Title', 'No Title Found')
+
+            buffer = {'TYPE': title, 'reader': pdf_reader}
 
     except FileNotFoundError:
         raise FileNotFoundError(f"Error: The file at {path} was not found.")
