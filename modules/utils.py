@@ -6,6 +6,7 @@ from openpyxl import load_workbook
 from openpyxl.utils.exceptions import InvalidFileException
 import xlrd
 import PyPDF2
+import re
 from .file_formats import data_formats
 """
 Validate file according to process of transport data from a spreadsheet to word/pdf
@@ -22,7 +23,7 @@ def get_input_file_list() -> List[File]:
 
     for file in file_list:
         full_path = os.path.join(input_directory, file)
-
+    
         file = File(full_path)
         if valid_extension(file) and is_valid_format(file):
             files.append(file)
@@ -78,8 +79,8 @@ def generate_forms(input_files: List[File]):
     for file in input_files:
         input_buffer = file_reader(file)
         required_form_type = input_buffer.get('TYPE')
-        required_template = next((template for template in template_files if file_reader(template).get('TYPE') == required_form_type), None)
 
+        required_template = next((template for template in template_files if file_reader(template).get('TYPE').strip() == required_form_type.strip()), None)
         file_writer(input_buffer, required_template)
 
 
@@ -104,7 +105,7 @@ def file_writer(buffer, template: File):
         else:
             raise NotImplementedError("writing to docx is not implemented yet.")
     except Exception as e:
-        raise Exception(f"buffer or template does not exist")
+        raise Exception(f"{e}")
 
 
 # 1. Function with test
@@ -130,23 +131,26 @@ def write_to_pdf(buffer: Dict[str, str], template: File):
     
     with open(output_path, "wb") as output_file:
         writer.write(output_file)
-        
+
+
 # TODO: check if implementation is correct
 def pdf_buffer(path: str) -> PyPDF2.PdfReader:
     try:
         with open(path, "rb") as f:
             pdf_reader = PyPDF2.PdfReader(f)
-            metadata = pdf_reader.metadata()
-            title = metadata.get('/Title', 'No Title Found')
+            metadata = pdf_reader.metadata
 
-            buffer = {'TYPE': title, 'reader': pdf_reader}
+            first_page = pdf_reader.pages[0].extract_text().splitlines()
+
+            # substring_pattern = re.compile(r'\b\w*FACILIT\w*\b', re.IGNORECASE)
+            form_type = [line for line in first_page if re.search(r'\b\w*FACILIT\w*\b', line, re.IGNORECASE)][0]
+
+            buffer = {'METADATA': metadata, 'reader': pdf_reader, 'TYPE': form_type}
 
     except FileNotFoundError:
         raise FileNotFoundError(f"Error: The file at {path} was not found.")
     except PermissionError:
         raise PermissionError(f"Error: Permission denied for the file at {path}.")
-    except csv.Error as e:
-        raise csv.Error(f"Error: An error occurred while reading the CSV file at {path}: {e}")
     except Exception as e:
         raise Exception(f"An unexpected error occurred: {e}")
     
