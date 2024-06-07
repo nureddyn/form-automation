@@ -2,6 +2,7 @@
 # /input/*
 # !/input/.gitkeep
 # /output/*
+/input/*
 !/templates/.gitkeep
 !/output/.gitkeep
 # /modules/private_formats.py
