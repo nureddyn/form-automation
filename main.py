@@ -1,5 +1,8 @@
-from modules.utils import *
+import os
+import sys
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
+from modules.utils import *
 def main():
 
     # Create the list of file instances
