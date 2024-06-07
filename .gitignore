@@ -2,9 +2,11 @@
 # /input/*
 # !/input/.gitkeep
 # /output/*
+!/templates/.gitkeep
 !/output/.gitkeep
 # /modules/private_formats.py
 /modules/__pycache__
 /modules/classes/__pycache__
 /tests/__pycache__
+/input/client_1.csv
 TODOS.txt
