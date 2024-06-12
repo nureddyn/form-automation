@@ -1,22 +1,35 @@
-import importlib.util
-import sys
+# modules/private_formats.py
+import os
+from modules.classes.File import File
+from modules.reader import file_reader
+from modules.path_handling import get_absolute_path
 
-"""This module defines formatting conventions for data files and form template files"""
+templates_folder = get_absolute_path('templates')
+templates_path_list = os.listdir(templates_folder)
 
-sys.path.append('modules')
+# Get the templates format from template file
+data_formats = []
 
-private_formats = 'private_formats'
+for template_path in templates_path_list:
+    path = os.path.join(templates_folder, template_path)
+    file_buffer = file_reader(File(path))
+    format = {}
+    format['TYPE'] = file_buffer['TYPE']
+    format = {**format, **file_buffer['fields']}
 
-module_spec = importlib.util.find_spec(private_formats)
-
-if module_spec is not None:
-    formats = importlib.import_module(private_formats)
+    data_formats.append(format)
 
 
-    data_formats = formats.data_formats
-
-# TODO: Look for an implementation of a default data_format
-else:
-    data_formats = [{}]
-
-form_template_formats = [{}]
+"""
+example:
+data_formats = [
+    {
+        'TYPE': TYPE,
+        'Name': '',
+        'Phone': '',
+        'Email': '',
+        'Country': '',
+    },
+    {'form-type': 'f2', 'd': ''}
+]
+"""

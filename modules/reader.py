@@ -1,4 +1,4 @@
-from buffer import *
+from .buffer import *
 from .classes.File import File
 
 def file_reader(file: File) -> Dict[str, str]:
