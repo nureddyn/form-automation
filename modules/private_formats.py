@@ -13,6 +13,23 @@ for template in templates_list:
     template_files.append(File(new_template))
 
 # TODO: create functionality to get every field from each template in templates folder
+
+"""Get the templates format"""
+
+# TODO: use the template to fill the data format, example:
+"""
+data_formats = [
+    {
+        'TYPE': TYPE,
+        'Name': '',
+        'Phone': '',
+        'Email': '',
+        'Country': '',
+    },
+    {'form-type': 'f2', 'd': ''}
+]
+"""
+
 TYPE = ''
 if len(template_files) > 0:
     TYPE = file_reader(template_files[0])['TYPE']

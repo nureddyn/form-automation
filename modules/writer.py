@@ -3,11 +3,12 @@ from .reader import *
 
 def write_to_pdf(buffer: Dict[str, str], template: File):
     reader = file_reader(template).get('reader')
-    writer = PyPDF2.PdfFileWriter()
+    
+    writer = PyPDF2.PdfWriter()
 
-    for page_num in range(reader.numPages):
-        page = reader.getPage(page_num)
-        writer.addPage(page)
+    for page_num in range(len(reader.pages)):
+        page = reader.pages[page_num]
+        writer.add_page(page)
 
         fields = reader.getFields(page)
         if fields:

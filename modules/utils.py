@@ -42,7 +42,8 @@ def is_valid_format(file: File) -> bool:
     file_buffer_keys = file_buffer.keys()
 
     for format in data_formats:
-        if format.keys() == file_buffer_keys and file_buffer.get('TYPE') == format.get('TYPE'):
+        print(file_buffer.get('TYPE'), format.get('TYPE'))
+        if format.keys() == file_buffer_keys and file_buffer.get('TYPE').strip() == format.get('TYPE').strip():
             return True
     return False
 
@@ -82,7 +83,8 @@ def generate_forms(input_files: List[File]):
              file_reader(template).get('TYPE').strip() == required_form_type.strip()),
               None
               )
-        file_writer(input_buffer, required_template)
+        # TODO: Fix this function:
+        # file_writer(input_buffer, required_template)
 
 
 # TODO: Implement writer functionality for docx
