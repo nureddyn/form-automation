@@ -15,8 +15,11 @@ def pdf_buffer(path: str) -> PyPDF2.PdfReader:
 
             # substring_pattern = re.compile(r'\b\w*FACILIT\w*\b', re.IGNORECASE)
             form_type = [line for line in first_page if re.search(r'\b\w*FACILIT\w*\b', line, re.IGNORECASE)][0]
-
-            buffer = {'METADATA': metadata, 'reader': pdf_reader, 'TYPE': form_type}
+            
+            form_fields = {}
+            if pdf_reader.get_form_text_fields():
+                form_fields =pdf_reader.get_form_text_fields()
+            buffer = {'METADATA': metadata, 'reader': pdf_reader, 'TYPE': form_type, 'fields': form_fields}
 
     except FileNotFoundError:
         raise FileNotFoundError(f"Error: The file at {path} was not found.")

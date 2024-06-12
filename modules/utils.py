@@ -83,8 +83,14 @@ def generate_forms(input_files: List[File]):
              file_reader(template).get('TYPE').strip() == required_form_type.strip()),
               None
               )
+        print(get_template_fields(required_template))
         # TODO: Fix this function:
         # file_writer(input_buffer, required_template)
+
+
+def get_template_fields(file: File) -> Dict:
+    reader = file_reader(file)['fields']
+    return reader
 
 
 # TODO: Implement writer functionality for docx

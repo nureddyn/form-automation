@@ -5,19 +5,30 @@ from modules.reader import file_reader
 from modules.path_handling import get_absolute_path
 
 templates_folder = get_absolute_path('templates')
-templates_list = os.listdir(templates_folder)
-
-template_files = []
-for template in templates_list:
-    new_template = os.path.join(templates_folder, template)
-    template_files.append(File(new_template))
+templates_path_list = os.listdir(templates_folder)
+# template_files = []
+# for template in templates_path_list:
+#     new_template = os.path.join(templates_folder, template)
+#     template_files.append(File(new_template))
 
 # TODO: create functionality to get every field from each template in templates folder
 
-"""Get the templates format"""
 
-# TODO: use the template to fill the data format, example:
+# Get the templates format from template file
+data_formats = []
+
+for template_path in templates_path_list:
+    path = os.path.join(templates_folder, template_path)
+    file_buffer = file_reader(File(path))
+    format = {}
+    format['TYPE'] = file_buffer['TYPE']
+    format = {**format, **file_buffer['fields']}
+
+    data_formats.append(format)
+
+
 """
+example:
 data_formats = [
     {
         'TYPE': TYPE,
@@ -29,18 +40,3 @@ data_formats = [
     {'form-type': 'f2', 'd': ''}
 ]
 """
-
-TYPE = ''
-if len(template_files) > 0:
-    TYPE = file_reader(template_files[0])['TYPE']
-
-data_formats = [
-    {
-        'TYPE': TYPE,
-        'Name': '',
-        'Phone': '',
-        'Email': '',
-        'Country': '',
-    },
-    {'form-type': 'f2', 'd': ''}
-]
