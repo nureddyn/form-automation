@@ -1,4 +1,5 @@
 import os
+import subprocess
 from .path_handling import *
 from typing import List, Any, Dict
 from .classes.File import File
@@ -12,7 +13,30 @@ from .writer import *
     This function may execute a script from another file that uses 'wget' command
 """
 def fetch_forms():
-    return
+    # TODO: Create a temporary process to return a list of paths from "templates" files
+    templates_path = get_absolute_path("templates")
+    url = "https://www.alleghenycounty.us/files/assets/county/v/1/government/health/documents/food-safety/temporary-checklist-2024.pdf"
+    try:
+         # Ensure the destination folder exists
+        os.makedirs(templates_path, exist_ok=True)
+
+        # Get the filename from the URL
+        filename = os.path.basename(url)
+        file_path = os.path.join(templates_path, filename)
+
+        # Construct the url command
+        command = ["curl", "-o", file_path, url]
+
+        # Execute the wget command
+        result = subprocess.run(command, capture_output=True, text=True)
+
+        # Check if the command was successful
+        if result.returncode == 0:
+            print(f"File downloaded successfully to {file_path}")
+        else:
+            print(f"Failed to download file. Error: {result.stderr}")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
 
 # TODO: Create function that scans the "templates" folder and returns a list of PDF template files
 """
