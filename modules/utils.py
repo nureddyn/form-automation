@@ -7,58 +7,37 @@ from .buffer import *
 from .reader import *
 from .writer import *
 
+# TODO: Create a function that fetch forms from source website and saves them in a folder called "templates"
 """
-Validate file according to process of transport data from a spreadsheet to word/pdf
+    This function may execute a script from another file that uses 'wget' command
 """
-
-# TODO: Validate files using a valid_extension (done), a valid_data_file (to check if the content format is correct) and a valid_template_file()
-
-def get_input_file_list() -> List[File]:
-    current_directory = os.path.dirname(os.path.realpath(__file__))
-    input_directory = os.path.join(current_directory, '..', 'input')
-    file_list = os.listdir(input_directory)
-
-    files = []
-
-    for file in file_list:
-        full_path = os.path.join(input_directory, file)
-        file = File(full_path)
-        print(is_valid_format(file))
-        if valid_extension(file) and is_valid_format(file):
-            files.append(file)
-    return files
-
-
-def valid_extension(file: File) -> bool:
-    if file.extension in [".csv", ".xlsx", ".gsheet", ".pdf"]:
-        return True
-    # raise ValueError("File extension not allowed")
-
-
-# TODO: This function must make a distinction between input and template files
-def is_valid_format(file: File) -> bool:
-    # Read the file and check if the format comply with predefined conventions
-    file_buffer = file_reader(file)
-    file_buffer_keys = file_buffer.keys()
-
-    for format in data_formats:
-        print(file_buffer.get('TYPE'), format.get('TYPE'))
-        if format.keys() == file_buffer_keys and file_buffer.get('TYPE').strip() == format.get('TYPE').strip():
-            return True
-    return False
-
-# TODO: Create a function that determines which template will be used.
-def data_file_format(file: File) -> str:
+def fetch_forms():
     return
 
-def get_file_type(file: File) -> str:
-    if file.extension in [".csv", ".xlsx", ".gsheet"]:
-        return 'Data file'
-    elif file.extension in [".docx", ".pdf"]:
-        return 'Template file'
-    raise ValueError("File type not allowed")
+# TODO: Create function that scans the "templates" folder and returns a list of PDF template files
+"""
+Example:
+form
+form_templates = generate_form_templates()
+print(form_templates) $[template_1, template_2, ...]
+"""
+
+def generate_form_templates() -> List[File]:
+    return
 
 
+# TODO: Create a function that simulates a user's selection of a file, taking the file list length, and returning a file index
+# This function replaces teporarly the selected index that comes from the UI
+def select_random_form_type(list_length: int) -> int:
+    return
+
+# TODO: Create a function that takes a list of template files and the index selected by the user, returning the selected file
+def get_selected_file(template_list: List[File], index: int) -> File:
+    return
+
+
+
+# --------------------------- Fix This -----------------------------------------
 # TODO: Pull the most recent forms from source to 'templates' folder
 def update_templates():
     return
@@ -91,6 +70,55 @@ def generate_forms(input_files: List[File]):
 def get_template_fields(file: File) -> Dict:
     reader = file_reader(file)['fields']
     return reader
+
+
+def get_input_file_list() -> List[File]:
+    current_directory = os.path.dirname(os.path.realpath(__file__))
+    input_directory = os.path.join(current_directory, '..', 'input')
+    file_list = os.listdir(input_directory)
+
+    files = []
+
+    for file in file_list:
+        full_path = os.path.join(input_directory, file)
+        file = File(full_path)
+        print(is_valid_format(file))
+        if valid_extension(file) and is_valid_format(file):
+            files.append(file)
+    return files
+
+
+# ---------------------------------------------------------
+
+
+def valid_extension(file: File) -> bool:
+    if file.extension in [".csv", ".xlsx", ".gsheet", ".pdf"]:
+        return True
+    # raise ValueError("File extension not allowed")
+
+
+# TODO: This function must make a distinction between input and template files
+def is_valid_format(file: File) -> bool:
+    # Read the file and check if the format comply with predefined conventions
+    file_buffer = file_reader(file)
+    file_buffer_keys = file_buffer.keys()
+
+    for format in data_formats:
+        print(file_buffer.get('TYPE'), format.get('TYPE'))
+        if format.keys() == file_buffer_keys and file_buffer.get('TYPE').strip() == format.get('TYPE').strip():
+            return True
+    return False
+
+# TODO: Create a function that determines which template will be used.
+def data_file_format(file: File) -> str:
+    return
+
+def get_file_type(file: File) -> str:
+    if file.extension in [".csv", ".xlsx", ".gsheet"]:
+        return 'Data file'
+    elif file.extension in [".docx", ".pdf"]:
+        return 'Template file'
+    raise ValueError("File type not allowed")
 
 
 # TODO: Implement writer functionality for docx
