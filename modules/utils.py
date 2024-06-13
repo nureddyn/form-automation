@@ -1,5 +1,6 @@
 import os
 import subprocess
+import platform
 from .path_handling import *
 from typing import List, Any, Dict
 from .classes.File import File
@@ -10,11 +11,12 @@ from .writer import *
 
 # TODO: Create a function that fetch forms from source website and saves them in a folder called "templates"
 """
-    This function may execute a script from another file that uses 'wget' command
+    This function may execute a script that uses 'wget' or 'curl' command
 """
 def fetch_forms():
-    # TODO: Create a temporary process to return a list of paths from "templates" files
     templates_path = get_absolute_path("templates")
+    
+    # TODO: create a predefined list of urls
     url = "https://www.alleghenycounty.us/files/assets/county/v/1/government/health/documents/food-safety/temporary-checklist-2024.pdf"
     try:
          # Ensure the destination folder exists
@@ -24,10 +26,17 @@ def fetch_forms():
         filename = os.path.basename(url)
         file_path = os.path.join(templates_path, filename)
 
-        # Construct the url command
-        command = ["curl", "-o", file_path, url]
+        # Determine fetch command based on operating system
+        system = platform.system()
+        if system == "Windows":
+            # Construct the url command
+            command = ["curl", "-o", file_path, url]
+        elif system == "Linux":
+            command = ["wget", url, "-P", templates_path]
+        else:
+            raise Exception(f"Unsupported operating system: {system}")
 
-        # Execute the wget command
+        # Execute wget or curl command
         result = subprocess.run(command, capture_output=True, text=True)
 
         # Check if the command was successful
