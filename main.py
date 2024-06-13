@@ -16,6 +16,7 @@ def main():
 
     # fetch_forms()
     # print(get_form_template_list()[0].path)
+    print(select_random_form_type(len(get_form_template_list())))
     return
 
 

@@ -1,6 +1,7 @@
 import os
 import subprocess
 import platform
+import random
 from .path_handling import *
 from typing import List, Any, Dict
 from .classes.File import File
@@ -61,7 +62,7 @@ def get_form_template_list() -> List[File]:
 # TODO: Create a function that simulates a user's selection of a file, taking the file list length, and returning a file index
 # This function replaces teporarly the selected index that comes from the UI
 def select_random_form_type(list_length: int) -> int:
-    return
+    return random.randrange(list_length)
 
 # TODO: Create a function that takes a list of template files and the index selected by the user, returning the selected file
 def get_selected_file(template_list: List[File], index: int) -> File:
@@ -83,7 +84,7 @@ def generate_forms(input_files: List[File]):
     templates_path = get_absolute_path('templates')
     templates_list = os.listdir(templates_path)
     template_files = [File(os.path.join(templates_path, template)) for template in templates_list]
-    print(input_files)
+    # print(input_files)
     for file in input_files:
         input_buffer = file_reader(file)
         required_form_type = input_buffer.get('TYPE')
@@ -94,7 +95,7 @@ def generate_forms(input_files: List[File]):
              file_reader(template).get('TYPE').strip() == required_form_type.strip()),
               None
               )
-        print(get_template_fields(required_template))
+        # print(get_template_fields(required_template))
         # TODO: Fix this function:
         # file_writer(input_buffer, required_template)
 
@@ -114,7 +115,7 @@ def get_input_file_list() -> List[File]:
     for file in file_list:
         full_path = os.path.join(input_directory, file)
         file = File(full_path)
-        print(is_valid_format(file))
+        # print(is_valid_format(file))
         if valid_extension(file) and is_valid_format(file):
             files.append(file)
     return files
@@ -136,7 +137,7 @@ def is_valid_format(file: File) -> bool:
     file_buffer_keys = file_buffer.keys()
 
     for format in data_formats:
-        print(file_buffer.get('TYPE'), format.get('TYPE'))
+        # print(file_buffer.get('TYPE'), format.get('TYPE'))
         if format.keys() == file_buffer_keys and file_buffer.get('TYPE').strip() == format.get('TYPE').strip():
             return True
     return False
