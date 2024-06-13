@@ -15,8 +15,10 @@ def main():
     # generate_forms(input_files)
 
     # fetch_forms()
-    # print(get_form_template_list()[0].path)
-    print(select_random_form_type(len(get_form_template_list())))
+    template_list = get_form_template_list()
+    template_index = select_random_form_type(len(template_list))
+    selected_file = get_selected_file(template_list, template_index)
+    print(selected_file.path)
     return
 
 

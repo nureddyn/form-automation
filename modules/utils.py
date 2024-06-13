@@ -67,7 +67,7 @@ def select_random_form_type(list_length: int) -> int:
 
 # TODO: Create a function that takes a list of template files and the index selected by the user, returning the selected file
 def get_selected_file(template_list: List[File], index: int) -> File:
-    return
+    return template_list[index]
 
 
 
