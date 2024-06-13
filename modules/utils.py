@@ -10,7 +10,7 @@ from .buffer import *
 from .reader import *
 from .writer import *
 
-# TODO: Create a function that fetch forms from source website and saves them in a folder called "templates"
+# TODO: update fetch_forms function to fetch a predefined form selected by the user.
 """
     This function may execute a script that uses 'wget' or 'curl' command
 """
@@ -69,6 +69,8 @@ def select_random_form_type(list_length: int) -> int:
 def get_selected_file(template_list: List[File], index: int) -> File:
     return template_list[index]
 
+
+# TODO: Create a function that generate a spreadsheet (excel) based on the selected
 
 
 # --------------------------- Fix This -----------------------------------------
