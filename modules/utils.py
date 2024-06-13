@@ -47,16 +47,15 @@ def fetch_forms():
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
 
-# TODO: Create function that scans the "templates" folder and returns a list of PDF template files
-"""
-Example:
-form
-form_templates = generate_form_templates()
-print(form_templates) $[template_1, template_2, ...]
-"""
 
-def generate_form_templates() -> List[File]:
-    return
+# Function that scans the "templates" folder and returns a list of PDF template files
+def get_form_template_list() -> List[File]:
+    templates_path = get_absolute_path("templates")
+    templates_list = os.listdir(templates_path)
+
+    templates_file_list = [File(os.path.join(templates_path, template)) for template in templates_list]
+    
+    return templates_file_list
 
 
 # TODO: Create a function that simulates a user's selection of a file, taking the file list length, and returning a file index
@@ -81,9 +80,9 @@ def generate_forms(input_files: List[File]):
     # update_templates()
 
     # TODO: Ensure the template file can be scanned to get the form type
-    templates_folder = get_absolute_path('templates')
-    templates_list = os.listdir(templates_folder)
-    template_files = [File(os.path.join(templates_folder, template)) for template in templates_list]
+    templates_path = get_absolute_path('templates')
+    templates_list = os.listdir(templates_path)
+    template_files = [File(os.path.join(templates_path, template)) for template in templates_list]
     print(input_files)
     for file in input_files:
         input_buffer = file_reader(file)

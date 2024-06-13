@@ -14,7 +14,8 @@ def main():
     # print(file_reader(files[0]))
     # generate_forms(input_files)
 
-    fetch_forms()
+    # fetch_forms()
+    # print(get_form_template_list()[0].path)
     return
 
 
