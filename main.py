@@ -16,9 +16,14 @@ def main():
 
     # fetch_forms()
     template_list = get_form_template_list()
-    template_index = select_random_form_type(len(template_list))
-    selected_file = get_selected_file(template_list, template_index)
-    print(selected_file.path)
+    
+    # check if there are files in "templates" folder
+    if len(template_list) > 0:
+        template_index = select_random_form_type(len(template_list))
+        selected_file = get_selected_file(template_list, template_index)
+        print(selected_file.path)
+    else:
+        print("There aren't template files.")
     return
 
 
