@@ -1,6 +1,7 @@
 import os
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+from modules.writer import *
 
 from modules.utils import *
 def main():
@@ -21,7 +22,9 @@ def main():
     if len(template_list) > 0:
         template_index = select_random_form_type(len(template_list))
         selected_file = get_selected_file(template_list, template_index)
-        print(selected_file.path)
+        # print(selected_file.path)
+        write_to_excel(selected_file)
+        
     else:
         print("There aren't template files.")
     return

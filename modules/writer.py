@@ -1,5 +1,7 @@
 import os
+from openpyxl import Workbook
 from .reader import *
+from .path_handling import get_absolute_path
 
 def write_to_pdf(buffer: Dict[str, str], template: File):
     reader = file_reader(template).get('reader')
@@ -23,3 +25,20 @@ def write_to_pdf(buffer: Dict[str, str], template: File):
     
     with open(output_path, "wb") as output_file:
         writer.write(output_file)
+
+
+def write_to_excel(file: File):
+    reader = file_reader(file)
+    content = reader.get('fields', {})
+    workbook = Workbook()
+    sheet = workbook.active
+
+    field_names = list(content.keys())
+
+    for row_index, (key, value) in enumerate(content.items(), start=1):
+        sheet.cell(row=row_index, column=1, value=key)
+        sheet.cell(row=row_index, column=2, value=value if value is not None else "N/A")
+
+    folder_to_save = get_absolute_path("output")
+    file_path = os.path.join(folder_to_save, f"{reader['TYPE']}.xlsx")
+    workbook.save(file_path)

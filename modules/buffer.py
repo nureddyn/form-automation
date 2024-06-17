@@ -19,7 +19,7 @@ def pdf_buffer(path: str) -> PyPDF2.PdfReader:
             form_fields = {}
             if pdf_reader.get_form_text_fields():
                 form_fields =pdf_reader.get_form_text_fields()
-            buffer = {'METADATA': metadata, 'reader': pdf_reader, 'TYPE': form_type, 'fields': form_fields}
+            buffer = {'METADATA': metadata, 'reader': pdf_reader, 'TYPE': form_type.strip(), 'fields': form_fields}
 
     except FileNotFoundError:
         raise FileNotFoundError(f"Error: The file at {path} was not found.")
@@ -74,7 +74,8 @@ def excel_buffer(path: str) -> Dict[str, str]:
     except Exception as e:
         raise Exception(f"An unexpected error occurred: {e}")
 
-    return buffer    
+    return buffer
+
 
 def gsheet_buffer(url) -> List[List[Any]]:
     # TODO: Apply google sheets logic (configure api and get url params)
