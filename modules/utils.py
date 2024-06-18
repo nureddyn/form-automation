@@ -49,19 +49,19 @@ def fetch_forms():
         print(f"An unexpected error occurred: {e}")
 
 
-# Function that scans the "templates" folder and returns a list of PDF template files
-def get_form_template_list() -> List[File]:
-    templates_path = get_absolute_path("templates")
-    templates_list = os.listdir(templates_path)
+# Function that scans a folder and returns a list of files
+def get_file_list(folder_name: str) -> List[File]:
+    folder_path = get_absolute_path(folder_name)
+    file_list = os.listdir(folder_path)
 
-    templates_file_list = [File(os.path.join(templates_path, template)) for template in templates_list]
+    folder_file_list = [File(os.path.join(folder_path, template)) for template in file_list]
     
-    return templates_file_list
+    return folder_file_list
 
 
 # TODO: Create a function that simulates a user's selection of a file, taking the file list length, and returning a file index
 # This function replaces teporarly the selected index that comes from the UI
-def select_random_form_type(list_length: int) -> int:
+def random_index(list_length: int) -> int:
     return random.randrange(list_length)
 
 

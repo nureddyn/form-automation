@@ -1,7 +1,7 @@
 /venv
 # /input/*
 # !/input/.gitkeep
-# /output/*
+/output/*
 /templates/*
 !/templates/.gitkeep
 !/output/.gitkeep
