@@ -3,36 +3,56 @@ from openpyxl import Workbook
 from .reader import *
 from .path_handling import get_absolute_path
 
-# TODO: Modify this function, according to the output of pdf_buffer
-import os
-import PyPDF2
-from typing import Dict, Any
+def write_to_pdf(buffer: Dict[str, str], template: File):
 
-def write_to_pdf(buffer: Dict[str, str], template: Any):
-    # Open the template file and read its content
-    with open(template.path, 'rb') as template_file:
-        reader = PyPDF2.PdfReader(template_file)
+    reader = PyPDF2.PdfReader(template.path)
+    writer = PyPDF2.PdfWriter()
 
-        writer = PyPDF2.PdfWriter()
-
-        for page_num in range(len(reader.pages)):
+    for page_num in range(len(reader.pages)):
             page = reader.pages[page_num]
+            fields = reader.get_fields()
+
             writer.add_page(page)
 
-            fields = reader.get_fields(page)
             if fields:
                 for key in buffer:
                     if key in fields:
-                        fields[key].update({"/V": buffer[key]})
-                writer.update_page_form_field_values(page, fields)
+                        # fields[key] = {"/V": buffer[key]}
+                
+                        writer.update_page_form_field_values(writer.pages[page_num], {key: buffer[key]})
 
         # Write the final pdf form in the output folder
-        current_dir = os.path.dirname(os.path.abspath(__file__))
-        output_path = os.path.join(current_dir, '..', 'output', "output.pdf")
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    output_path = os.path.join(current_dir, '..', 'output', "output.pdf")
 
-        with open(output_path, "wb") as output_file:
-            writer.write(output_file)
+    with open(output_path, "wb") as output_file:
+        writer.write(output_file)
 
+
+    # with open(template.path, 'rb') as template_file:
+    #     reader = PyPDF2.PdfReader(template_file)
+
+    #     writer = PyPDF2.PdfWriter()
+
+    #     for page_num in range(len(reader.pages)):
+    #         page = reader.pages[page_num]
+    #         fields = reader.get_fields()
+
+    #         writer.add_page(page)
+
+            # if fields:
+            #     for key in buffer:
+            #         if key in fields:
+            #             # fields[key] = {"/V": buffer[key]}
+                
+            #             writer.update_page_form_field_values(writer.pages[page_num], {key: buffer[key]})
+
+    #     # Write the final pdf form in the output folder
+    #     current_dir = os.path.dirname(os.path.abspath(__file__))
+    #     output_path = os.path.join(current_dir, '..', 'output', "output.pdf")
+
+    #     with open(output_path, "wb") as output_file:
+    #         writer.write(output_file)
 
 
 def write_to_excel(file: File):
