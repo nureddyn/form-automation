@@ -2,6 +2,7 @@ import os
 import subprocess
 import platform
 import random
+import re
 from .path_handling import *
 from typing import List, Any, Dict
 from .classes.File import File
@@ -10,43 +11,58 @@ from .buffer import *
 from .reader import *
 from .writer import *
 
-# TODO: update fetch_forms function to fetch a predefined form selected by the user.
+
+# Predefined forms
+forms = {
+    "permanent-food-facility": "perm-food-facility-application_fillable.pdf",
+    "mobile-food-facility": "mobile-food-facility-application-final-230131.pdf",
+    "change-ownership": "change-of-ownership-app-fillable.pdf",
+    "temporary-food-facility": "temporary-checklist-2024.pdf",
+    "shared-kitchen": "shared-kitchen-user-app-fillable.pdf",
+    "class-1-food-facility": "class-1-registration-application-fillable.pdf"
+    }
+
 """
     This function may execute a script that uses 'wget' or 'curl' command
 """
-def fetch_forms():
+def fetch_forms(name: str):
     templates_path = get_absolute_path("templates")
     
+    url = "https://www.alleghenycounty.us/files/assets/county/v/1/government/health/documents/food-safety/"
+    if name in forms.keys():
+        form_url = f"{url}{forms[name]}"
     # TODO: create a predefined list of urls
-    url = "https://www.alleghenycounty.us/files/assets/county/v/1/government/health/documents/food-safety/temporary-checklist-2024.pdf"
-    try:
-         # Ensure the destination folder exists
-        os.makedirs(templates_path, exist_ok=True)
+    # url = "https://www.alleghenycounty.us/files/assets/county/v/1/government/health/documents/food-safety/temporary-checklist-2024.pdf"
+        try:
+            # Ensure the destination folder exists
+            os.makedirs(templates_path, exist_ok=True)
 
-        # Get the filename from the URL
-        filename = os.path.basename(url)
-        file_path = os.path.join(templates_path, filename)
+            # Get the filename from the URL
+            filename = os.path.basename(form_url)
+            file_path = os.path.join(templates_path, filename)
 
-        # Determine fetch command based on operating system
-        system = platform.system()
-        if system == "Windows":
-            # Construct the url command
-            command = ["curl", "-o", file_path, url]
-        elif system == "Linux":
-            command = ["wget", url, "-P", templates_path]
-        else:
-            raise Exception(f"Unsupported operating system: {system}")
+            # Determine fetch command based on operating system
+            system = platform.system()
+            if system == "Windows":
+                # Construct the url command
+                command = ["curl", "-o", file_path, form_url]
+            elif system == "Linux":
+                command = ["wget", form_url, "-P", templates_path]
+            else:
+                raise Exception(f"Unsupported operating system: {system}")
 
-        # Execute wget or curl command
-        result = subprocess.run(command, capture_output=True, text=True)
+            # Execute wget or curl command
+            result = subprocess.run(command, capture_output=True, text=True)
 
-        # Check if the command was successful
-        if result.returncode == 0:
-            print(f"File downloaded successfully to {file_path}")
-        else:
-            print(f"Failed to download file. Error: {result.stderr}")
-    except Exception as e:
-        print(f"An unexpected error occurred: {e}")
+            # Check if the command was successful
+            if result.returncode == 0:
+                print(f"File downloaded successfully to {file_path}")
+            else:
+                print(f"Failed to download file. Error: {result.stderr}")
+        except Exception as e:
+            print(f"An unexpected error occurred: {e}")
+    else:
+        print("form not found")
 
 
 # Function that scans a folder and returns a list of files

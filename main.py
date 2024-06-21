@@ -1,14 +1,27 @@
 import os
 import sys
+import argparse
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from modules.writer import *
 
 from modules.utils import *
 def main():
 
+
+    parser = argparse.ArgumentParser(description="form automation demo")
+    parser.add_argument('fetch-forms', type=str, help='fetch the specified form from webpage')
+    parser.add_argument('args', nargs='*', help='The name of the form')
+    args = parser.parse_args()
+
+    if args.command == 'fetch-form':
+        if len(args.args) != 1:
+            print("fetch-form requires exactly one argument (the form name)")
+    else:
+        result = fetch_forms(args.args[0])
+
     # Create the list of file instances
     # TODO: Fix this:
-    input_files = get_input_file_list()
+    # input_files = get_input_file_list()
     # is_valid_format(files[0])
 
     # Print file content:
@@ -28,17 +41,17 @@ def main():
     # else:
     #     print("There aren't template files.")
     # return
-    output_list = get_file_list("output")
-    templates = get_file_list("templates")
-    # TODO: Create a function that compares the template type with the spreadsheet type, 
-    # to select a file without hardcoding the process
-    template = get_selected_file(templates, 0)
-    if len(output_list) > 0:
-        file_index = random_index(len(output_list))
-        selected_file = get_selected_file(output_list, file_index)
-        print(selected_file.path)
-        buffer = file_reader(selected_file)
-        write_to_pdf(buffer, template)
+    # output_list = get_file_list("output")
+    # templates = get_file_list("templates")
+    # # TODO: Create a function that compares the template type with the spreadsheet type, 
+    # # to select a file without hardcoding the process
+    # template = get_selected_file(templates, 0)
+    # if len(output_list) > 0:
+    #     file_index = random_index(len(output_list))
+    #     selected_file = get_selected_file(output_list, file_index)
+    #     print(selected_file.path)
+    #     buffer = file_reader(selected_file)
+    #     write_to_pdf(buffer, template)
 
 
 
