@@ -13,24 +13,28 @@ from .writer import *
 
 
 # Predefined forms
-forms = {
-    "permanent-food-facility": "perm-food-facility-application_fillable.pdf",
-    "mobile-food-facility": "mobile-food-facility-application-final-230131.pdf",
-    "change-ownership": "change-of-ownership-app-fillable.pdf",
-    "temporary-food-facility": "temporary-checklist-2024.pdf",
-    "shared-kitchen": "shared-kitchen-user-app-fillable.pdf",
-    "class-1-food-facility": "class-1-registration-application-fillable.pdf"
+forms = { 
+    "health-department": {
+        "url": "https://www.alleghenycounty.us/files/assets/county/v/1/government/health/documents/food-safety/",
+        "forms": {
+            "permanent-food-facility": "perm-food-facility-application_fillable.pdf",
+            "mobile-food-facility": "mobile-food-facility-application-final-230131.pdf",
+            "change-ownership": "change-of-ownership-app-fillable.pdf",
+            "temporary-food-facility": "temporary-checklist-2024.pdf",
+            "shared-kitchen": "shared-kitchen-user-app-fillable.pdf",
+            "class-1-food-facility": "class-1-registration-application-fillable.pdf"
+        }
     }
+}
 
 """
     This function may execute a script that uses 'wget' or 'curl' command
 """
-def fetch_form(name: str):
+def fetch_form(department:str, form_name: str):
     templates_path = get_absolute_path("templates")
-    
-    url = "https://www.alleghenycounty.us/files/assets/county/v/1/government/health/documents/food-safety/"
-    if name in forms.keys():
-        form_url = f"{url}{forms[name]}"
+
+    if forms[department] and form_name in forms[department]["forms"].keys():
+        form_url = f"{forms[department]["url"]}{forms[department]["forms"][form_name]}"
 
         try:
             # Ensure the destination folder exists

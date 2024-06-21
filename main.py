@@ -16,10 +16,10 @@ def main():
 
 
     if args.command in utilities.keys():
-        if len(args.args) != 1:
-            print(f"{args.command} requires exactly one argument (form name)")
+        if len(args.args) != 2:
+            print(f"{args.command} requires exactly two arguments")
         else:
-            utilities[args.command](args.args[0])
+            utilities[args.command](args.args[0], args.args[1])
             # fetch_form(args.args[0])
 
 
@@ -36,15 +36,19 @@ def main():
     # template_list = get_file_list("templates")
     
     # check if there are files in "templates" folder
+    
+    # -----------------------
+    # TODO: Convert the following process into the function form_fields_to_excel() in utils
     # if len(template_list) > 0:
     #     template_index = random_index(len(template_list))
     #     selected_file = get_selected_file(template_list, template_index)
     #     # print(selected_file.path)
     #     write_to_excel(selected_file)
-        
     # else:
     #     print("There aren't template files.")
     # return
+    # ----------------------------
+
     # output_list = get_file_list("output")
     # templates = get_file_list("templates")
     # # TODO: Create a function that compares the template type with the spreadsheet type, 
