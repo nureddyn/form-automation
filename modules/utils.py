@@ -25,14 +25,13 @@ forms = {
 """
     This function may execute a script that uses 'wget' or 'curl' command
 """
-def fetch_forms(name: str):
+def fetch_form(name: str):
     templates_path = get_absolute_path("templates")
     
     url = "https://www.alleghenycounty.us/files/assets/county/v/1/government/health/documents/food-safety/"
     if name in forms.keys():
         form_url = f"{url}{forms[name]}"
-    # TODO: create a predefined list of urls
-    # url = "https://www.alleghenycounty.us/files/assets/county/v/1/government/health/documents/food-safety/temporary-checklist-2024.pdf"
+
         try:
             # Ensure the destination folder exists
             os.makedirs(templates_path, exist_ok=True)
@@ -64,6 +63,7 @@ def fetch_forms(name: str):
     else:
         print("form not found")
 
+utilities = {'fetch-form': fetch_form}
 
 # Function that scans a folder and returns a list of files
 def get_file_list(folder_name: str) -> List[File]:

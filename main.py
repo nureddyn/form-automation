@@ -4,20 +4,24 @@ import argparse
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from modules.writer import *
 
+import modules.utils
 from modules.utils import *
 def main():
 
 
     parser = argparse.ArgumentParser(description="form automation demo")
-    parser.add_argument('fetch-forms', type=str, help='fetch the specified form from webpage')
+    parser.add_argument('command', type=str, help='fetch the specified form from webpage')
     parser.add_argument('args', nargs='*', help='The name of the form')
     args = parser.parse_args()
 
-    if args.command == 'fetch-form':
+
+    if args.command in utilities.keys():
         if len(args.args) != 1:
-            print("fetch-form requires exactly one argument (the form name)")
-    else:
-        result = fetch_forms(args.args[0])
+            print(f"{args.command} requires exactly one argument (form name)")
+        else:
+            utilities[args.command](args.args[0])
+            # fetch_form(args.args[0])
+
 
     # Create the list of file instances
     # TODO: Fix this:
