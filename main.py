@@ -8,19 +8,27 @@ import modules.utils
 from modules.utils import *
 def main():
 
-
+    """
+        Create a command line interface, to serve as the demo
+    """
+    # Create the main command and its arguments structure
     parser = argparse.ArgumentParser(description="form automation demo")
     parser.add_argument('command', type=str, help='fetch the specified form from webpage')
     parser.add_argument('args', nargs='*', help='The name of the form')
     args = parser.parse_args()
 
-
-    if args.command in utilities.keys():
+    # Handle the fetch form command
+    if args.command == 'fetch-form':
         if len(args.args) != 2:
-            print(f"{args.command} requires exactly two arguments")
+            print(f"{args.command} requires exactly two arguments: department and form name")
         else:
-            utilities[args.command](args.args[0], args.args[1])
-            # fetch_form(args.args[0])
+            department = args.args[0]
+            form_name = args.args[1] 
+            # fetch_form(department, form_name)
+            form_file = get_form_file(form_name)
+            print(form_file)
+            if form_file:
+                write_to_excel(form_file)
 
 
     # Create the list of file instances
