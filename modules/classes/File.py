@@ -1,11 +1,10 @@
-# from typing import str
 import os
 
-#
 class File:
     def __init__(self, path):
         self.path = path
         self.extension = self.get_extension(path)
+        self.name = self.get_name(path)
 
     # path getter, to return the path property of an instance
     @property
@@ -33,3 +32,8 @@ class File:
     def get_extension(path):
         _, ext = os.path.splitext(path)
         return ext.lower()
+
+    def get_name(self, path):
+        base_name = os.path.basename(path)
+        name, _ = os.path.splitext(base_name)
+        return name

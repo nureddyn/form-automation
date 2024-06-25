@@ -68,5 +68,5 @@ def write_to_excel(file: File):
         sheet.cell(row=row_index, column=2, value=value if value is not None else "N/A")
 
     folder_to_save = get_absolute_path("output")
-    file_path = os.path.join(folder_to_save, f"{reader['TYPE']}.xlsx")
+    file_path = os.path.join(folder_to_save, f"{file.name}.xlsx")
     workbook.save(file_path)
