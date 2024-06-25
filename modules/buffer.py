@@ -13,7 +13,7 @@ def pdf_buffer(path: str) -> PyPDF2.PdfReader:
 
             first_page = pdf_reader.pages[0].extract_text().splitlines()
 
-            # substring_pattern = re.compile(r'\b\w*FACILIT\w*\b', re.IGNORECASE)
+            # TODO: Remove unnecesary use of regular expression for 'TYPE' field in buffer
             form_type = [line for line in first_page if re.search(r'\b\w*FACILIT\w*\b', line, re.IGNORECASE)][0]
             
             form_fields = {}

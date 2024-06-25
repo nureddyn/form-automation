@@ -10,28 +10,15 @@ from modules.file_formats import data_formats
 from .buffer import *
 from .reader import *
 from .writer import *
+from .models.forms import FORMS
 
 
-# Predefined forms
-forms = { 
-    "health-department": {
-        "url": "https://www.alleghenycounty.us/files/assets/county/v/1/government/health/documents/food-safety/",
-        "forms": {
-            "permanent-food-facility": "perm-food-facility-application_fillable.pdf",
-            "mobile-food-facility": "mobile-food-facility-application-final-230131.pdf",
-            "change-ownership": "change-of-ownership-app-fillable.pdf",
-            "temporary-food-facility": "temporary-checklist-2024.pdf",
-            "shared-kitchen": "shared-kitchen-user-app-fillable.pdf",
-            "class-1-food-facility": "class-1-registration-application-fillable.pdf"
-        }
-    }
-}
 def get_form_file(department, form_name: str) -> File:
     folder_path = get_absolute_path("templates")
     file_list = os.listdir(folder_path)
     form_file = None
     for name in file_list:
-        if name == forms[department]["forms"][form_name]:
+        if name == FORMS[department]["forms"][form_name]:
             form_file = File(os.path.join(folder_path, name))
     return form_file
 
@@ -42,8 +29,8 @@ def get_form_file(department, form_name: str) -> File:
 def fetch_form(department:str, form_name: str):
     templates_path = get_absolute_path("templates")
 
-    if forms[department] and form_name in forms[department]["forms"].keys():
-        form_url = f"{forms[department]["url"]}{forms[department]["forms"][form_name]}"
+    if FORMS[department] and form_name in FORMS[department]["forms"].keys():
+        form_url = f"{FORMS[department]["url"]}{FORMS[department]["forms"][form_name]}"
 
         try:
             # Ensure the destination folder exists
@@ -76,7 +63,6 @@ def fetch_form(department:str, form_name: str):
     else:
         print("form not found")
 
-utilities = {'fetch-form': fetch_form}
 
 # Function that scans a folder and returns a list of files
 def get_file_list(folder_name: str) -> List[File]:
