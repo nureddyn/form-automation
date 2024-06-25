@@ -24,8 +24,8 @@ def main():
         else:
             department = args.args[0]
             form_name = args.args[1] 
-            # fetch_form(department, form_name)
-            form_file = get_form_file(form_name)
+            fetch_form(department, form_name)
+            form_file = get_form_file(department, form_name)
             print(form_file)
             if form_file:
                 write_to_excel(form_file)

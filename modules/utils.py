@@ -26,14 +26,13 @@ forms = {
         }
     }
 }
-def get_form_file(form_name: str) -> File:
+def get_form_file(department, form_name: str) -> File:
     folder_path = get_absolute_path("templates")
     file_list = os.listdir(folder_path)
-    print(file_list)
     form_file = None
     for name in file_list:
-        if name == form_name:
-            form_file = File(name)
+        if name == forms[department]["forms"][form_name]:
+            form_file = File(os.path.join(folder_path, name))
     return form_file
 
 
