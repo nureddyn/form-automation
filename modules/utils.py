@@ -13,6 +13,22 @@ from .writer import *
 from .models.forms import FORMS
 
 
+def get_spreadsheet_file(department, form_name: str) -> File:
+    spreadsheet_path = get_absolute_path("output")
+    spreadsheet_file_list = os.listdir(spreadsheet_path)
+    spreadsheet_file = None
+
+    template_path = get_absolute_path("templates")
+    templates_path_list = os.listdir(template_path)
+    template_files = [os.path.splitext(template)[0] for template in templates_path_list]
+
+    for base_name in spreadsheet_file_list:
+        name, _ = os.path.splitext(base_name)
+        if name in template_files:
+            spreadsheet_file = File(os.path.join(spreadsheet_path, base_name))
+    return spreadsheet_file
+
+
 def get_form_file(department, form_name: str) -> File:
     folder_path = get_absolute_path("templates")
     file_list = os.listdir(folder_path)
@@ -74,26 +90,6 @@ def get_file_list(folder_name: str) -> List[File]:
     return folder_file_list
 
 
-# TODO: Create a function that simulates a user's selection of a file, taking the file list length, and returning a file index
-# This function replaces teporarly the selected index that comes from the UI
-def random_index(list_length: int) -> int:
-    return random.randrange(list_length)
-
-
-# TODO: Create a function that takes a list of template files and the index selected by the user, returning the selected file
-def get_selected_file(template_list: List[File], index: int) -> File:
-    return template_list[index]
-
-
-# TODO: Create a function that generate a spreadsheet (excel) based on the selected
-
-
-# --------------------------- Fix This -----------------------------------------
-# TODO: Pull the most recent forms from source to 'templates' folder
-def update_templates():
-    return
-
-
 def generate_forms(input_files: List[File]):
 
     # update_templates()
@@ -116,6 +112,8 @@ def generate_forms(input_files: List[File]):
         # print(get_template_fields(required_template))
         # TODO: Fix this function:
         # file_writer(input_buffer, required_template)
+
+
 
 
 def get_template_fields(file: File) -> Dict:

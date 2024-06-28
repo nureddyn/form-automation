@@ -16,10 +16,21 @@ def main():
     parser.add_argument('args', nargs='*', help='The name of the form')
     args = parser.parse_args()
 
-    # Handler: "Generate Spreadsheet with form fields" -> "use existing form"
-    if args.command == 'spreadsheet-from-existing-form':
+
+    # fetch form from website
+    if args.command == 'fetch-form':
         if len(args.args) != 2:
             # TODO: Create a model to structure commands messages
+            print(f"{args.command} requires exactly two arguments: department and form name")
+        else:
+            department = args.args[0]
+            form_name = args.args[1] 
+            fetch_form(department, form_name)
+
+
+    # generate spreadsheet from existing form
+    if args.command == 'get-fillable-spreadsheet':
+        if len(args.args) != 2:
             print(f"{args.command} requires exactly two arguments: department and form name")
         else:
             department = args.args[0]
@@ -30,20 +41,22 @@ def main():
             else:
                 print("The form file does not exist")
 
-    # Handler: "Generate Spreadsheet with form fields" -> "Fetch form from website"
-    if args.command == 'spreadsheet-from-website-form':
+
+    # fill out form based on a spreadsheet
+    if args.command == 'fill-out-form':
         if len(args.args) != 2:
-            # TODO: Create a model to structure commands messages
-            print(f"{args.command} requires exactly two arguments: department and form name")
+            print(f"{args.command} requires exactly two argument: department and form name")
         else:
             department = args.args[0]
-            form_name = args.args[1] 
-            fetch_form(department, form_name)
-            form_file = get_form_file(department, form_name)
-            if form_file:
-                write_to_excel(form_file)
+            form_name = args.args[1]
+            spreadsheet_file = get_spreadsheet_file(department, form_name)
 
-
+            if spreadsheet_file:
+                print(spreadsheet_file.path)
+            # TODO: fix this:
+            #     write_to_pdf(spreadsheet_file)
+            # else:
+            #     print("The form file does not exist")
 
 if __name__ == "__main__":
     main()
