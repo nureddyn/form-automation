@@ -53,10 +53,11 @@ def main():
 
             if spreadsheet_file:
                 print(spreadsheet_file.path)
-            # TODO: fix this:
-            #     write_to_pdf(spreadsheet_file)
-            # else:
-            #     print("The form file does not exist")
+                buffer = file_reader(spreadsheet_file)
+                template = get_form_file(department, form_name)
+                write_to_pdf(buffer, template)
+            else:
+                print("The form file does not exist")
 
 if __name__ == "__main__":
     main()
