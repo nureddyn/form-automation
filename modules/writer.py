@@ -63,9 +63,11 @@ def write_to_excel(file: File):
 
     field_names = list(content.keys())
 
+    field_number = 0
     for row_index, (key, value) in enumerate(content.items(), start=1):
         sheet.cell(row=row_index, column=1, value=key)
-        sheet.cell(row=row_index, column=2, value=value if value is not None else "N/A")
+        sheet.cell(row=row_index, column=2, value=value if value is not None else field_number)
+        field_number += 1
 
     folder_to_save = get_absolute_path("output")
     file_path = os.path.join(folder_to_save, f"{file.name}.xlsx")

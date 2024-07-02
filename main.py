@@ -29,6 +29,7 @@ def main():
 
 
     # generate spreadsheet from existing form
+    # TODO: handle correctly checkbox fields
     if args.command == 'get-fillable-spreadsheet':
         if len(args.args) != 2:
             print(f"{args.command} requires exactly two arguments: department and form name")
